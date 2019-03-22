@@ -271,9 +271,11 @@ int media_ponderada (){
 
 int nome_matr(){
     //numero 9 na lista do menu.
+    int regis = 1810022047;
+
     printf("########################\n");
     printf("      Nome: Ozair Barsosa   \n");
-    printf("      Matricula: 1810022047 \n");
+    printf("      Matricula em hexadecimal: %x\n", regis);
     printf("########################\n");
 
     return 0;
