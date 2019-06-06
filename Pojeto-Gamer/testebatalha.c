@@ -121,33 +121,74 @@ void criando_matriz(char ** matriz, char ** criptografada, int linhas, int colun
     navios(matriz, linhas, colunas);
 }
 
+int pontuacao(char **criptografada, int linha_jogada, int coluna_jogada, int vez, int *pontos_jogador1, int *pontos_jogador2){
+
+    if(criptografada[linha_jogada][coluna_jogada] == '<' || criptografada[linha_jogada][coluna_jogada] == '=' || criptografada[linha_jogada][coluna_jogada] == '>'){
+        if(vez == 1){
+            (*pontos_jogador1)++;
+        }else if(vez == 2){
+            (*pontos_jogador2)++;
+        }
+        return 1;
+    }
+
+    return 0;
+}
+
 int main(void){
 
+    int tentativa = 0, jogadasmax, max_tentativa = 20, controle = 1, vez = 1;
+
     char ** matriz, ** criptografada;
-    int linhas, colunas, linha_jogada, coluna_jogada;
-    int i, j;
+    int i, j, linhas, colunas, linha_jogada, coluna_jogada, pontos_jogador1 = 0, pontos_jogador2 = 0;
 
     opcao_matriz(&linhas, &colunas);
+
+    jogadasmax = linhas * colunas;
 
     matriz = (char **) malloc(linhas * sizeof(char *));
     criptografada = (char **) malloc(linhas * sizeof(char *));
 
-    for(i = 0; i < linhas; i++){
+    for(i = 0; i < linhas; i++)
+    {
         matriz[i] = (char *) malloc(colunas * sizeof(char));
         criptografada[i] = (char *) malloc(colunas * sizeof(char));
     }
 
     criando_matriz(matriz, criptografada, linhas, colunas);
 
-    exibe_tabuleiro(criptografada, linhas, colunas);
+    system("cls");
 
-    coordenadas(&linha_jogada, &coluna_jogada);
+    while(tentativa < jogadasmax){
 
-    if(verifica(criptografada, linha_jogada, coluna_jogada, linhas, colunas)){
-            movimenta(matriz, criptografada, linha_jogada, coluna_jogada);
+        while(controle){
+
+            printf("\n\t\t\tJogador 1: %d pontos --- Jogador 2: %d pontos\n", pontos_jogador1, pontos_jogador2);
+
+            printf("\n\t\t\t\t   Vez do jogador %d\n\n", vez);
+
+            exibe_tabuleiro(criptografada, linhas, colunas);
+
+            coordenadas(&linha_jogada, &coluna_jogada);
+
+            if(verifica(criptografada, linha_jogada, coluna_jogada, linhas, colunas)){
+                movimenta(matriz, criptografada, linha_jogada, coluna_jogada);
+                tentativa++;
+
+                if(pontuacao(criptografada, linha_jogada, coluna_jogada, vez, &pontos_jogador1, &pontos_jogador2)){
+                    controle = 1;
+                }else{controle = 0;}
+            }
+
+            system("cls");
+        }
+
+        vez = vez == 1 ? 2 : 1;
+
+        controle = 1;
     }
 
-    exibe_tabuleiro(criptografada, linhas, colunas);
+    printf("O jogador %d ganhou por %d x %d", pontos_jogador1 > pontos_jogador2 ? 1 : 2);
 
-  return 0;
+    return 0;
 }
